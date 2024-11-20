@@ -1,13 +1,16 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { SignUpRequest, SignInRequest } from "../services/auth.service";
+import { SignUpRequest, SignInRequest, UserModel, login, register } from "../services/auth.service";
 import { getItem, removeItem, setItem } from "../services/cache.service";
 import { api } from "../services/api";
+import Toast from "react-native-toast-message";
+import { useNavigation } from "@react-navigation/native";
+
 
 interface AuthContextData {
     isLogged: boolean;
-    user: any,
-    signIn: (value: SignInRequest) => void;
-    singUp: (value: SignUpRequest) => void;
+    user: UserModel | null,
+    signIn: (value: SignInRequest) => Promise<void>;
+    signUp: (value: SignUpRequest) => Promise<void>;
     logout: () => void;
 }
 
@@ -16,8 +19,9 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isLogged, setIsLogged] = useState(false);
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<UserModel | null>(null);
     const [token, setToken] = useState<string | null>(null);
+    const navigator = useNavigation();
 
 
     useEffect(() => {
@@ -48,11 +52,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [user]);
 
-    const signIn = (value: SignInRequest) => {
-        setIsLogged(true);
+    const signIn = async (value: SignInRequest) => {
+        try {
+            const { access_token, user } = await login(value);
+            setToken(access_token);
+            setUser(user)
+            navigator.navigate("Home" as never);
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Erro ao fazer login",
+                text2: "Verifique suas credenciais e tente novamente",
+            });
+        }
     };
 
-    const singUp = (value: SignUpRequest) => { };
+    const signUp = async (value: SignUpRequest) => {
+        try {
+            const { id } = await register(value);
+            Toast.show({
+                type: "success",
+                text1: "Cadastro realizado com sucesso",
+                text2: "Faça login para continuar",
+            });
+            navigator.navigate("Login" as never);
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Erro ao fazer cadastro",
+                text2: "Verifique seus dados e tente novamente",
+            });
+        }
+    };
 
     const logout = () => {
         setIsLogged(false);
@@ -63,7 +94,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ isLogged, signIn, singUp, user, logout }}>
+        <AuthContext.Provider value={{ isLogged, signIn, signUp, user, logout }}>
             {children}
         </AuthContext.Provider>
     );

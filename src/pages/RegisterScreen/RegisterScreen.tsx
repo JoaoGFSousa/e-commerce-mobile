@@ -7,14 +7,15 @@ import { Form } from "@/src/components/Form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "./schema";
+import { useAuth } from "@/src/contexts/AuthContext";
 
 export const RegisterScreen = ({ navigation }: NativeStackScreenProps<any>) => {
     const { register, setValue, formState: { errors }, handleSubmit } = useForm({
         mode: "all", resolver: zodResolver(registerSchema),
     });
-
+    const { signUp } = useAuth();
     const onSubmit = (data: any) => {
-        console.log(data);
+        signUp(data);
     }
     return (
         <SafeAreaView style={styles.container} >

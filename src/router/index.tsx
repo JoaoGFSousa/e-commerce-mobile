@@ -18,7 +18,10 @@ export const Router = () => {
         headerShown: true,
         title: "Carrinho",
       }} />
-      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Login" component={LoginScreen} options={{
+        headerShown: true,
+        title: "",
+      }} />
       <Stack.Screen name="Register" component={RegisterScreen} />
     </Stack.Navigator>
   );

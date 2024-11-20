@@ -14,7 +14,8 @@ export const LoginScreen = ({ navigation }: NativeStackScreenProps<any>) => {
     const { register, setValue, formState: { errors }, handleSubmit } = useForm({ resolver: zodResolver(loginSchema) });
     const { signIn } = useAuth();
     const onSubmit = (data: any) => { signIn(data)
-         navigation.navigate("Home") };
+         
+         };
 
     return (
         <SafeAreaView style={styles.container} >
