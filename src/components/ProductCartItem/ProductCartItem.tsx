@@ -16,7 +16,9 @@ export const ProductCartItem = ({
     const { removeProduct, addQuantity, subQuantity } = useCart();
     return (
         <View style={styles.itemContainer}>
-            <Image style={styles.itemImage} source={item.picture}
+            <Image 
+            style={styles.itemImage} 
+            source={`${process.env.EXPO_PUBLIC_BASE_URL}/${item.picture}`}
                 placeholder={{ blurhash }}
                 contentFit="cover"
             />

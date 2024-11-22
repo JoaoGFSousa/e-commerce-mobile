@@ -8,7 +8,6 @@ import { styles } from "./styles";
 export const AccountScreen = ({ navigation }: NativeStackScreenProps<any>) => {
     const { isLogged, user, logout } = useAuth();
 
-
     if (!user || !isLogged) {
         return (
             <View style={styles.container}>

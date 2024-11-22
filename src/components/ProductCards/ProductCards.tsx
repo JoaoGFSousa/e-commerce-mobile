@@ -16,7 +16,9 @@ export const ProductCard: FC<ProductCardProps> = ({ product }) => {
     return (
         <View style={styles.productCardContainer} >
             <View style={styles.productContainer} >
-                <Image style={styles.productImage} source={`${process.env.EXPO_PUBLIC_BASE_URL}/${product.picture}`} contentFit="cover"
+                <Image
+                    style={styles.productImage}
+                    source={`${process.env.EXPO_PUBLIC_BASE_URL}/${product.picture}`} contentFit="cover"
                     placeholder={{ blurhash }} transition={1000} />
                 <View style={styles.productDetails} >
                     <Text style={styles.productName} >{product.name}</Text>
